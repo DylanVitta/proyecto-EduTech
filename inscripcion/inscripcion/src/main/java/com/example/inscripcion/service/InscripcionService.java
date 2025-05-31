@@ -36,7 +36,7 @@ public class InscripcionService {
     }   
     public Inscripcion getisncripcion(Long id){
         return inscripcionRepository.findById(id).orElseThrow
-        (()-> new RuntimeException("Cliente no encontrado"));
+        (()-> new RuntimeException("inscripcion no encontrada"));
 
     }
     public List<Inscripcion> getcurso( Long idcurso){

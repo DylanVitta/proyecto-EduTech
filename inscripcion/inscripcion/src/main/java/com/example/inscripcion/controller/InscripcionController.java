@@ -44,17 +44,13 @@ public class InscripcionController {
 
         }
     }    
-    @GetMapping ("/{idusuario}")
-    public List<Inscripcion> obtenerusuarios(@PathVariable Long usuarioid){
-        return inscripcionService.getusuarios(usuarioid);
-    }
 
-    @GetMapping("/{idcurso}")
+    @GetMapping("/{idcurso}/cursos")
     public List<Inscripcion> obtenercursos(@PathVariable Long idcurso){
         return inscripcionService.getcurso(idcurso);
     }
 
-    @PatchMapping("/{id}/estado")
+    @PatchMapping("/{id}/estado") //--?activo=estado---/
     public ResponseEntity<Inscripcion> actualizarestado(@PathVariable Long id, @RequestParam boolean activo){
         return ResponseEntity.ok(inscripcionService.putEstado(id, activo));
     }
