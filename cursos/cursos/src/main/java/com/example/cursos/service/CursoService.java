@@ -1,10 +1,12 @@
 package com.example.cursos.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.cursos.WebClient.UsuarioClient;
 import com.example.cursos.model.Curso;
 import com.example.cursos.repository.CursoRepository;
 
@@ -15,9 +17,20 @@ import jakarta.transaction.Transactional;
 public class CursoService {
     @Autowired
     private CursoRepository cursoRepository;
-    
+    @Autowired 
+    private UsuarioClient usuarioClient;
     public Curso saveCurso(Curso curso){
-        return cursoRepository.save(curso);
+        Map<String, Object> datosUsuario = usuarioClient.obtenerUsuarioPorId(curso.getIdprofesor());
+        Map<String, Object> rol = (Map<String, Object>) datosUsuario.get("rol");
+        String nombreRol = (String) rol.get("nombre");
+        if (!"PROFESOR".equalsIgnoreCase(nombreRol)) {
+            throw new RuntimeException("El usuario no tiene rol de PROFESOR");
+        }
+
+    return cursoRepository.save(curso);
+    }
+    public List<Curso> getbyidprofesor(Long id_profesor){
+        return cursoRepository.findByIdprofesor(id_profesor);
     }
 
     public List<Curso> getCursos (){
