@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.asistencia.WebClient.InscripcionClient;
 import com.example.asistencia.model.Asistencia;
 import com.example.asistencia.repository.AsistenciaRepository;
 
@@ -13,8 +14,11 @@ import com.example.asistencia.repository.AsistenciaRepository;
 public class AsistenciaService {
     @Autowired
     private AsistenciaRepository asistenciaRepository;
+    @Autowired
+    private InscripcionClient inscripcionClient;
 
     public Asistencia saveAsistencia(Asistencia asistencia){
+        inscripcionClient.obtenerInscripcionPorId(asistencia.getInscripcionid());
         if(asistencia.getFecha()==null){
             asistencia.setFecha(LocalDate.now());
 
@@ -30,7 +34,14 @@ public class AsistenciaService {
         (()-> new RuntimeException("Cliente no encontrado"));
 
     }
-        public boolean deleteAsistencia( Long id){
+    public Asistencia patchPresente(Long id, boolean presente) {
+    Asistencia asistencia = asistenciaRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Asistencia no encontrada"));
+
+    asistencia.setPresente(presente);
+    return asistenciaRepository.save(asistencia);}
+
+    public boolean deleteAsistencia( Long id){
        if( asistenciaRepository.existsById(id)){
         asistenciaRepository.deleteById(id);
         return true;
