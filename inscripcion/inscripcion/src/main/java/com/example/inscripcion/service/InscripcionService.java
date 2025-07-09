@@ -8,17 +8,31 @@ import org.springframework.stereotype.Service;
 
 import com.example.inscripcion.model.Inscripcion;
 import com.example.inscripcion.repository.InscripcionRepository;
+import com.example.inscripcion.webClient.CursoClient;
+import com.example.inscripcion.webClient.UsuarioCliente;
+
+import jakarta.transaction.Transactional;
 
 @Service
+@Transactional
 public class InscripcionService {
     @Autowired
     private InscripcionRepository inscripcionRepository;
+    @Autowired
+    private CursoClient cursoClient;
+
+    @Autowired
+    private UsuarioCliente usuarioCliente;
 
 
     public Inscripcion saveInscripcion(Long idcurso, Long idusuario){
         if (inscripcionRepository.existsByIdcursoAndIdusuario(idcurso, idusuario)) {
             throw new RuntimeException("El usuario ya está inscrito en este curso.");
         }
+        usuarioCliente.obtenerusuarioId(idusuario);
+        cursoClient.obtenercursoId(idcurso);
+
+        
         Inscripcion inscripcion=new Inscripcion();
         inscripcion.setIdusuario(idusuario);
         inscripcion.setIdcurso(idcurso);
